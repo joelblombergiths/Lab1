@@ -1,84 +1,106 @@
 ﻿#pragma warning disable IDE0062 // Make local function 'static'
 
-string inputString = "29535123p487234875976457236458";
+string inputString = "29535123p48723487597645723645";
 
-List<ulong> numbers = GetAllNumbers(inputString);
+List<string> numbers = GetAllMatchingNumberParts(inputString);
 
-PrintMatrix(numbers);
+PrintMatrix(inputString, numbers);
 
 PrintSumOfAllNumbers(numbers);
+
+Console.ReadKey(true);
+
 
 
 //Functions
 
-List<ulong> GetAllNumbers(string inputString)
+List<string> GetAllMatchingNumberParts(string inputString)
 {
-	List<ulong> allNumbers = new();
+    List<string> allNumbers = new();
 
-	for (int startIndex = 0; startIndex < inputString.Length - 1; startIndex++)
-	{
-		if (TryFindIndexOfTwin(inputString, startIndex, out int twinIndex))
-		{
-			string matchingNumber = inputString[startIndex..twinIndex];
-			allNumbers.Add(Convert.ToUInt64(matchingNumber));
-		}
-	}
+    for (int startIndex = 0; startIndex < inputString.Length - 1; startIndex++)
+    {
+        if (TryFindIndexOfTwin(inputString, startIndex, out int twinIndex))
+        {
+            string matchingNumber = inputString[startIndex..twinIndex];
+            allNumbers.Add(matchingNumber);
+        }
+    }
 
-	return allNumbers;
+    return allNumbers;
 }
 
-/// <summary>
-/// Tries to find the index of the next matching digit to the digit att the <paramref name="startIndex"/> position.
-/// </summary>
-/// <param name="inputString">The string to search in</param>
-/// <param name="startIndex">Position in <paramref name="inputString"/>to start searching</param>
-/// <param name="foundIndex">If successful this will contain the index for the twin</param>
-/// <returns>Returns <c>True</c> if successfully found a match, otherwise <c>False</c></returns>
 bool TryFindIndexOfTwin(string inputString, int startIndex, out int foundIndex)
 {
-	foundIndex = -1;
-	char digitToMatch = inputString[startIndex];
+    foundIndex = -1;
+    char digitToMatch = inputString[startIndex];
+            
+    for (int i = startIndex + 1; i < inputString.Length; i++)
+    {
+        char currentCharacter = inputString[i];
 
-	if (!char.IsDigit(digitToMatch))
-	{
-		return false;
-	}
-	else
-	{
-		for (int i = startIndex + 1; i < inputString.Length; i++)
-		{
-			char currentCharacter = inputString[i];
-
-			if (!char.IsDigit(currentCharacter))
-			{
-				return false;
-			}
-			else if (digitToMatch.Equals(currentCharacter))
-			{
-				foundIndex = i + 1;
-				return true;
-			}
-		}
-		
-		return false;
-	}
+        if (TryCheckDigitsForMatch(digitToMatch, currentCharacter, out bool isMatch))
+        {
+            if (isMatch)
+            {
+                foundIndex = i + 1;
+                return true;
+            }
+        }
+        else return false;
+    }
+        
+    return false;
 }
 
-void PrintMatrix(List<ulong> numbers)
+bool TryCheckDigitsForMatch(char firstDigit, char secondDigit, out bool isMatch)
 {
-	
+    isMatch = false;
+
+    if (char.IsDigit(firstDigit) && char.IsDigit(secondDigit))
+    {
+        if (firstDigit.Equals(secondDigit))
+        {
+            isMatch = true;			
+        }
+    }
+    else return false;
+
+    return true;
 }
 
-
-void PrintSumOfAllNumbers(List<ulong> numbers)
+void PrintMatrix(string inputString, List<string> listOfNumbers)
 {
-	ulong sum = 0;
+    foreach (string number in listOfNumbers)
+    {
+        PrintColoredRow(inputString, number);
+        Console.WriteLine();
+    }	
+}
 
-	foreach(int number in numbers)
-	{
-		sum += Convert.ToUInt64(number);
-	}
+void PrintColoredRow(string inputString, string number)
+{
+    int positionOfNumber = inputString.IndexOf(number);
 
-	Console.WriteLine();
-	Console.WriteLine($"Total: {sum}");
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.Write(inputString[0..positionOfNumber]);
+
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.Write(inputString[positionOfNumber..(positionOfNumber + number.Length)]);
+
+    Console.ForegroundColor = ConsoleColor.White;
+    Console.Write(inputString[(positionOfNumber + number.Length)..^0]);
+}
+
+void PrintSumOfAllNumbers(List<string> listOfNumbers)
+{
+    ulong sum = 0;
+
+    foreach(string number in listOfNumbers)
+    {
+        sum += Convert.ToUInt64(number);
+    }
+
+    Console.WriteLine();
+    Console.WriteLine($"Total: {sum}");
 }
