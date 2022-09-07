@@ -5,22 +5,25 @@
 
 //29535123p48723487597645723645
 
+bool isProgramRunning = true;
+
 do
 {
-    FindFidgits();
+    FindFigits();
 
     Console.WriteLine();
     Console.WriteLine("Press ESC to Quit or the Any key to enter a new sequence.");
-    if (Console.ReadKey(true).Key == ConsoleKey.Escape) break;
+
+    if (Console.ReadKey(true).Key == ConsoleKey.Escape) isProgramRunning = false;
     
     Console.Clear();
 }
-while (true);
+while (isProgramRunning);
 
 
-void FindFidgits()
+void FindFigits()
 {
-    Console.WriteLine("Welcome to Fredrik's Fantastic Fidgit Finder");
+    Console.WriteLine("Welcome to Fredrik's Fantastic Figit Finder");
 
     string inputString = RequestUserInput();
 
@@ -34,10 +37,7 @@ void FindFidgits()
 
         PrintSumOfAllNumbers(numbers);
     }
-    else
-    {
-        Console.WriteLine("Sequence Contained no Fidgits");
-    }
+    else Console.WriteLine("Sequence Contained no Fidgits");
 }
 
 List<string> GetAllMatchingNumberParts(string inputString)
@@ -46,7 +46,7 @@ List<string> GetAllMatchingNumberParts(string inputString)
 
     for (int startIndex = 0; startIndex < inputString.Length - 1; startIndex++)
     {
-        if (TryFindIndexOfTwin(inputString, startIndex, out int twinIndex))
+        if (TryFindIndexOfTwinDigit(inputString, startIndex, out int twinIndex))
         {
             string matchingNumber = inputString[startIndex..twinIndex];
             allNumbers.Add(matchingNumber);
@@ -56,7 +56,7 @@ List<string> GetAllMatchingNumberParts(string inputString)
     return allNumbers;
 }
 
-bool TryFindIndexOfTwin(string inputString, int startIndex, out int foundIndex)
+bool TryFindIndexOfTwinDigit(string inputString, int startIndex, out int foundIndex)
 {
     foundIndex = -1;
     char digitToMatch = inputString[startIndex];
@@ -138,6 +138,7 @@ string RequestUserInput()
 {
     string input;
     bool isValidInput;
+
     do
     {
         Console.WriteLine("Enter a Fidgit Sequence:");
