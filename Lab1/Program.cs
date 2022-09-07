@@ -1,18 +1,44 @@
 ﻿#pragma warning disable IDE0062 // Make local function 'static'
+#pragma warning disable CS8604 // Possible null reference argument.
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+#pragma warning disable CS8603 // Possible null reference return.
 
-string inputString = "29535123p48723487597645723645";
+//29535123p48723487597645723645
 
-List<string> numbers = GetAllMatchingNumberParts(inputString);
+do
+{
+    FindFidgits();
 
-PrintMatrix(inputString, numbers);
+    Console.WriteLine();
+    Console.WriteLine("Press ESC to Quit or the Any key to enter a new sequence.");
+    if (Console.ReadKey(true).Key == ConsoleKey.Escape) break;
+    
+    Console.Clear();
+}
+while (true);
 
-PrintSumOfAllNumbers(numbers);
 
-Console.ReadKey(true);
+void FindFidgits()
+{
+    Console.WriteLine("Welcome to Fredrik's Fantastic Fidgit Finder");
 
+    string inputString = RequestUserInput();
 
+    List<string> numbers = GetAllMatchingNumberParts(inputString);
 
-//Functions
+    if (numbers.Count > 0)
+    {
+        Console.Clear();
+
+        PrintMatrix(inputString, numbers);
+
+        PrintSumOfAllNumbers(numbers);
+    }
+    else
+    {
+        Console.WriteLine("Sequence Contained no Fidgits");
+    }
+}
 
 List<string> GetAllMatchingNumberParts(string inputString)
 {
@@ -71,16 +97,19 @@ bool TryCheckDigitsForMatch(char firstDigit, char secondDigit, out bool isMatch)
 
 void PrintMatrix(string inputString, List<string> listOfNumbers)
 {
+    int startIndex = 0;
     foreach (string number in listOfNumbers)
     {
-        PrintColoredRow(inputString, number);
+        PrintColoredRow(inputString, number, startIndex, out int previousNumberLocation);
+        startIndex = previousNumberLocation + 1;
+
         Console.WriteLine();
     }	
 }
 
-void PrintColoredRow(string inputString, string number)
+void PrintColoredRow(string inputString, string number, int startIndex, out int positionOfNumber)
 {
-    int positionOfNumber = inputString.IndexOf(number);
+    positionOfNumber = inputString.IndexOf(number, startIndex);
 
     Console.ForegroundColor = ConsoleColor.White;
     Console.Write(inputString[0..positionOfNumber]);
@@ -103,4 +132,24 @@ void PrintSumOfAllNumbers(List<string> listOfNumbers)
 
     Console.WriteLine();
     Console.WriteLine($"Total: {sum}");
+}
+
+string RequestUserInput()
+{
+    string input;
+    bool isValidInput;
+    do
+    {
+        Console.WriteLine("Enter a Fidgit Sequence:");
+        input = Console.ReadLine();
+
+        isValidInput = !string.IsNullOrEmpty(input);
+        if (!isValidInput)
+        {
+            Console.WriteLine("You can better than that...");
+        }
+    }
+    while (!isValidInput);
+
+    return input;
 }
