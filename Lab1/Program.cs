@@ -37,7 +37,7 @@ void FindFigits()
 
         PrintSumOfAllNumbers(numbers);
     }
-    else Console.WriteLine("Sequence Contained no Fidgits");
+    else Console.WriteLine("Sequence Contained no Figits");
 }
 
 List<string> GetAllMatchingNumberParts(string inputString)
