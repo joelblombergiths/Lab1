@@ -30,10 +30,8 @@ void FindFigits()
     List<string> numbers = GetAllMatchingNumberParts(inputString);
 
     if (numbers.Count > 0)
-    {
-        Console.Clear();
-
-        PrintMatrix(inputString, numbers);
+    {      
+        PrintAllNumbers(inputString, numbers);
 
         PrintSumOfAllNumbers(numbers);
     }
@@ -95,8 +93,10 @@ bool TryCheckDigitsForMatch(char firstDigit, char secondDigit, out bool isMatch)
     return true;
 }
 
-void PrintMatrix(string inputString, List<string> listOfNumbers)
+void PrintAllNumbers(string inputString, List<string> listOfNumbers)
 {
+    Console.Clear();
+
     int startIndex = 0;
     foreach (string number in listOfNumbers)
     {
@@ -112,13 +112,18 @@ void PrintColoredRow(string inputString, string number, int startIndex, out int 
     positionOfNumber = inputString.IndexOf(number, startIndex);
 
     Console.ForegroundColor = ConsoleColor.White;
-    Console.Write(inputString[0..positionOfNumber]);
+
+    string everythingBeforeTheNumber = inputString[0..positionOfNumber];
+    Console.Write(everythingBeforeTheNumber);
 
     Console.ForegroundColor = ConsoleColor.Green;
-    Console.Write(inputString[positionOfNumber..(positionOfNumber + number.Length)]);
+    Console.Write(number);
+    //string theNumber = inputString[positionOfNumber..(positionOfNumber + number.Length)];
 
     Console.ForegroundColor = ConsoleColor.White;
-    Console.Write(inputString[(positionOfNumber + number.Length)..^0]);
+
+    string everythingAfterTheNumber = inputString[(positionOfNumber + number.Length)..^0];
+    Console.Write(everythingAfterTheNumber);
 }
 
 void PrintSumOfAllNumbers(List<string> listOfNumbers)
@@ -141,7 +146,7 @@ string RequestUserInput()
 
     do
     {
-        Console.WriteLine("Enter a Fidgit Sequence:");
+        Console.WriteLine("Enter a Figit Sequence:");
         input = Console.ReadLine();
 
         isValidInput = !string.IsNullOrEmpty(input);
