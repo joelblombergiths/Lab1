@@ -27,7 +27,7 @@ void FindFigits()
 
     string inputString = RequestUserInput();
 
-    List<string> numbers = GetAllMatchingNumberParts(inputString);
+    List<string> numbers = GetAllMatchingNumbers(inputString);
 
     if (numbers.Count > 0)
     {      
@@ -38,20 +38,20 @@ void FindFigits()
     else Console.WriteLine("Sequence Contained no Figits");
 }
 
-List<string> GetAllMatchingNumberParts(string inputString)
+List<string> GetAllMatchingNumbers(string inputString)
 {
-    List<string> allNumbers = new();
+    List<string> allMatchingNumbers = new();
 
     for (int startIndex = 0; startIndex < inputString.Length - 1; startIndex++)
     {
         if (TryFindIndexOfTwinDigit(inputString, startIndex, out int twinIndex))
         {
             string matchingNumber = inputString[startIndex..twinIndex];
-            allNumbers.Add(matchingNumber);
+            allMatchingNumbers.Add(matchingNumber);
         }
     }
 
-    return allNumbers;
+    return allMatchingNumbers;
 }
 
 bool TryFindIndexOfTwinDigit(string inputString, int startIndex, out int foundIndex)
@@ -93,37 +93,36 @@ bool TryCheckDigitsForMatch(char firstDigit, char secondDigit, out bool isMatch)
     return true;
 }
 
-void PrintAllNumbers(string inputString, List<string> listOfNumbers)
+void PrintAllNumbers(string originalString, List<string> listOfNumbers)
 {
     Console.Clear();
 
     int startIndex = 0;
     foreach (string number in listOfNumbers)
     {
-        PrintColoredRow(inputString, number, startIndex, out int previousNumberLocation);
+        PrintRowWithNumberColored(originalString, number, startIndex, out int previousNumberLocation);
         startIndex = previousNumberLocation + 1;
 
         Console.WriteLine();
     }	
 }
 
-void PrintColoredRow(string inputString, string number, int startIndex, out int positionOfNumber)
+void PrintRowWithNumberColored(string row, string number, int startIndex, out int positionOfNumber)
 {
-    positionOfNumber = inputString.IndexOf(number, startIndex);
+    positionOfNumber = row.IndexOf(number, startIndex);
 
     Console.ForegroundColor = ConsoleColor.White;
 
-    string everythingBeforeTheNumber = inputString[0..positionOfNumber];
-    Console.Write(everythingBeforeTheNumber);
+    string everythingBeforeNumber = row[0..positionOfNumber];
+    Console.Write(everythingBeforeNumber);
 
     Console.ForegroundColor = ConsoleColor.Green;
     Console.Write(number);
-    //string theNumber = inputString[positionOfNumber..(positionOfNumber + number.Length)];
 
     Console.ForegroundColor = ConsoleColor.White;
 
-    string everythingAfterTheNumber = inputString[(positionOfNumber + number.Length)..^0];
-    Console.Write(everythingAfterTheNumber);
+    string everythingAfterNumber = row[(positionOfNumber + number.Length)..^0];
+    Console.Write(everythingAfterNumber);
 }
 
 void PrintSumOfAllNumbers(List<string> listOfNumbers)
