@@ -5,6 +5,8 @@
 
 //29535123p48723487597645723645
 
+using System.Numerics;
+
 bool isProgramRunning = true;
 
 do
@@ -38,13 +40,34 @@ void FindFigits()
     else Console.WriteLine("Sequence Contained no Figits");
 }
 
+string RequestUserInput()
+{
+    string input;
+    bool isValidInput;
+
+    do
+    {
+        Console.WriteLine("Enter a Figit Sequence:");
+        input = Console.ReadLine();
+
+        isValidInput = !string.IsNullOrEmpty(input);
+        if (!isValidInput)
+        {
+            Console.WriteLine("You can better than that...");
+        }
+    }
+    while (!isValidInput);
+
+    return input;
+}
+
 List<string> GetAllMatchingNumbers(string inputString)
 {
     List<string> allMatchingNumbers = new();
 
     for (int startIndex = 0; startIndex < inputString.Length - 1; startIndex++)
     {
-        if (TryFindIndexOfTwinDigit(inputString, startIndex, out int twinIndex))
+        if (TryFindNextIndexOfTwinDigit(inputString, startIndex, out int twinIndex))
         {
             string matchingNumber = inputString[startIndex..twinIndex];
             allMatchingNumbers.Add(matchingNumber);
@@ -54,7 +77,7 @@ List<string> GetAllMatchingNumbers(string inputString)
     return allMatchingNumbers;
 }
 
-bool TryFindIndexOfTwinDigit(string inputString, int startIndex, out int foundIndex)
+bool TryFindNextIndexOfTwinDigit(string inputString, int startIndex, out int foundIndex)
 {
     foundIndex = -1;
     char digitToMatch = inputString[startIndex];
@@ -108,15 +131,16 @@ void PrintAllNumbers(string originalString, List<string> listOfNumbers)
 }
 
 void PrintRowWithNumberColored(string row, string number, int startIndex, out int positionOfNumber)
-{
+{   
     positionOfNumber = row.IndexOf(number, startIndex);
 
     Console.ForegroundColor = ConsoleColor.White;
 
     string everythingBeforeNumber = row[0..positionOfNumber];
     Console.Write(everythingBeforeNumber);
+    
+    Console.ForegroundColor = ConsoleColor.Green;    
 
-    Console.ForegroundColor = ConsoleColor.Green;
     Console.Write(number);
 
     Console.ForegroundColor = ConsoleColor.White;
@@ -127,34 +151,13 @@ void PrintRowWithNumberColored(string row, string number, int startIndex, out in
 
 void PrintSumOfAllNumbers(List<string> listOfNumbers)
 {
-    ulong sum = 0;
+    BigInteger sum = 0;
 
     foreach(string number in listOfNumbers)
     {
-        sum += Convert.ToUInt64(number);
+        sum += BigInteger.Parse(number);
     }
 
     Console.WriteLine();
     Console.WriteLine($"Total: {sum}");
-}
-
-string RequestUserInput()
-{
-    string input;
-    bool isValidInput;
-
-    do
-    {
-        Console.WriteLine("Enter a Figit Sequence:");
-        input = Console.ReadLine();
-
-        isValidInput = !string.IsNullOrEmpty(input);
-        if (!isValidInput)
-        {
-            Console.WriteLine("You can better than that...");
-        }
-    }
-    while (!isValidInput);
-
-    return input;
 }
