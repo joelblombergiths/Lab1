@@ -1,11 +1,4 @@
-﻿#pragma warning disable IDE0062 // Make local function 'static'
-#pragma warning disable CS8604 // Possible null reference argument.
-#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
-#pragma warning disable CS8603 // Possible null reference return.
-
-//29535123p48723487597645723645
-
-using System.Numerics;
+﻿using System.Numerics;
 
 bool isProgramRunning = true;
 
