@@ -6,45 +6,11 @@ do
 {
     Console.WriteLine("Welcome to Fredrik's Fantastic Figit Finder");
 
-    string inputString = RequestUserInput();
+    Console.WriteLine("Enter a Figit Sequence:");
+    string inputString = Console.ReadLine();
 
     sum = 0;
 
-    PrintAllMatchingNumbers(inputString);
-
-    Console.WriteLine();
-    if (sum > 0) Console.WriteLine($"Total: {sum}");
-    else Console.WriteLine("Sequence Contained no Figits");
-
-    Console.WriteLine();
-    Console.WriteLine("Press ESC to Quit or the Any key to enter a new sequence.");
-
-    if (Console.ReadKey(true).Key.Equals(ConsoleKey.Escape)) Environment.Exit(0);
-    
-    Console.Clear();
-}
-while (true);
-
-
-string RequestUserInput()
-{
-    string input;
-    
-    do
-    {
-        Console.WriteLine("Enter a Figit Sequence:");
-        input = Console.ReadLine();
-
-        if (string.IsNullOrEmpty(input)) Console.WriteLine("You can better than that...");
-        else break;
-    }
-    while (true);
-
-    return input;
-}
-
-void PrintAllMatchingNumbers(string inputString)
-{
     Console.Clear();
 
     for (int startIndex = 0; startIndex < inputString.Length - 1; startIndex++)
@@ -68,11 +34,24 @@ void PrintAllMatchingNumbers(string inputString)
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine(inputString[(startIndex + matchingNumber.Length)..^0]);
 
+                    sum = BigInteger.Add(sum, BigInteger.Parse(matchingNumber));
 
-                    BigInteger.Add(sum, BigInteger.Parse(matchingNumber));                    
+                    break;
                 }
             }
-            else break; 
+            else break;
         }
     }
+
+    Console.WriteLine();
+    if (sum > 0) Console.WriteLine($"Total: {sum}");
+    else Console.WriteLine("Sequence Contained no Figits");
+
+    Console.WriteLine();
+    Console.WriteLine("Press ESC to Quit or the Any key to enter a new sequence.");
+
+    if (Console.ReadKey(true).Key.Equals(ConsoleKey.Escape)) Environment.Exit(0);
+    
+    Console.Clear();
 }
+while (true);
