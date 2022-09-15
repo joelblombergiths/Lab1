@@ -1,156 +1,78 @@
 ﻿using System.Numerics;
 
-bool isProgramRunning = true;
+BigInteger sum;
 
 do
-{
-    FindFigits();
-
-    Console.WriteLine();
-    Console.WriteLine("Press ESC to Quit or the Any key to enter a new sequence.");
-
-    if (Console.ReadKey(true).Key == ConsoleKey.Escape) isProgramRunning = false;
-    
-    Console.Clear();
-}
-while (isProgramRunning);
-
-
-void FindFigits()
 {
     Console.WriteLine("Welcome to Fredrik's Fantastic Figit Finder");
 
     string inputString = RequestUserInput();
 
-    List<string> numbers = GetAllMatchingNumbers(inputString);
+    sum = 0;
 
-    if (numbers.Count > 0)
-    {      
-        PrintAllNumbers(inputString, numbers);
+    PrintAllMatchingNumbers(inputString);
 
-        PrintSumOfAllNumbers(numbers);
-    }
+    Console.WriteLine();
+    if (sum > 0) Console.WriteLine($"Total: {sum}");
     else Console.WriteLine("Sequence Contained no Figits");
+
+    Console.WriteLine();
+    Console.WriteLine("Press ESC to Quit or the Any key to enter a new sequence.");
+
+    if (Console.ReadKey(true).Key.Equals(ConsoleKey.Escape)) Environment.Exit(0);
+    
+    Console.Clear();
 }
+while (true);
+
 
 string RequestUserInput()
 {
     string input;
-    bool isValidInput;
-
+    
     do
     {
         Console.WriteLine("Enter a Figit Sequence:");
         input = Console.ReadLine();
 
-        isValidInput = !string.IsNullOrEmpty(input);
-        if (!isValidInput)
-        {
-            Console.WriteLine("You can better than that...");
-        }
+        if (string.IsNullOrEmpty(input)) Console.WriteLine("You can better than that...");
+        else break;
     }
-    while (!isValidInput);
+    while (true);
 
     return input;
 }
 
-List<string> GetAllMatchingNumbers(string inputString)
-{
-    List<string> allMatchingNumbers = new();
-
-    for (int startIndex = 0; startIndex < inputString.Length - 1; startIndex++)
-    {
-        if (TryFindNextIndexOfTwinDigit(inputString, startIndex, out int twinIndex))
-        {
-            string matchingNumber = inputString[startIndex..twinIndex];
-            allMatchingNumbers.Add(matchingNumber);
-        }
-    }
-
-    return allMatchingNumbers;
-}
-
-bool TryFindNextIndexOfTwinDigit(string inputString, int startIndex, out int foundIndex)
-{
-    foundIndex = -1;
-    char digitToMatch = inputString[startIndex];
-            
-    for (int i = startIndex + 1; i < inputString.Length; i++)
-    {
-        char currentCharacter = inputString[i];
-
-        if (TryCheckDigitsForMatch(digitToMatch, currentCharacter, out bool isMatch))
-        {
-            if (isMatch)
-            {
-                foundIndex = i + 1;
-                return true;
-            }
-        }
-        else return false;
-    }
-        
-    return false;
-}
-
-bool TryCheckDigitsForMatch(char firstDigit, char secondDigit, out bool isMatch)
-{
-    isMatch = false;
-
-    if (char.IsDigit(firstDigit) && char.IsDigit(secondDigit))
-    {
-        if (firstDigit.Equals(secondDigit))
-        {
-            isMatch = true;			
-        }
-    }
-    else return false;
-
-    return true;
-}
-
-void PrintAllNumbers(string originalString, List<string> listOfNumbers)
+void PrintAllMatchingNumbers(string inputString)
 {
     Console.Clear();
 
-    int startIndex = 0;
-    foreach (string number in listOfNumbers)
+    for (int startIndex = 0; startIndex < inputString.Length - 1; startIndex++)
     {
-        PrintRowWithNumberColored(originalString, number, startIndex, out int previousNumberLocation);
-        startIndex = previousNumberLocation + 1;
+        if (!char.IsDigit(inputString[startIndex])) continue;
 
-        Console.WriteLine();
-    }	
-}
+        for (int next = startIndex + 1; next < inputString.Length; next++)
+        {
+            if (char.IsDigit(inputString[next]))
+            {
+                if (inputString[startIndex].Equals(inputString[next]))
+                {
+                    string matchingNumber = inputString[startIndex..(next + 1)];
 
-void PrintRowWithNumberColored(string row, string number, int startIndex, out int positionOfNumber)
-{   
-    positionOfNumber = row.IndexOf(number, startIndex);
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(inputString[0..startIndex]);
 
-    Console.ForegroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write(matchingNumber);
 
-    string everythingBeforeNumber = row[0..positionOfNumber];
-    Console.Write(everythingBeforeNumber);
-    
-    Console.ForegroundColor = ConsoleColor.Green;    
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine(inputString[(startIndex + matchingNumber.Length)..^0]);
 
-    Console.Write(number);
 
-    Console.ForegroundColor = ConsoleColor.White;
-
-    string everythingAfterNumber = row[(positionOfNumber + number.Length)..^0];
-    Console.Write(everythingAfterNumber);
-}
-
-void PrintSumOfAllNumbers(List<string> listOfNumbers)
-{
-    BigInteger sum = 0;
-
-    foreach(string number in listOfNumbers)
-    {
-        sum += BigInteger.Parse(number);
+                    BigInteger.Add(sum, BigInteger.Parse(matchingNumber));                    
+                }
+            }
+            else break; 
+        }
     }
-
-    Console.WriteLine();
-    Console.WriteLine($"Total: {sum}");
 }
