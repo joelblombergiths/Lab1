@@ -2,11 +2,11 @@
 {
     public static class Helpers
     {
-        public static void AppendText(this RichTextBox box, string text, Color color, bool addNewLine = false)
+        public static void AppendText(this RichTextBox box, string text, Color? color = null, bool newLine = false)
         {
             box.SuspendLayout();
-            box.SelectionColor = color;
-            box.AppendText(addNewLine ? $"{text}{Environment.NewLine}" : text);
+            box.SelectionColor = color ?? Color.Black;
+            box.AppendText(newLine ? $"{text}{Environment.NewLine}" : text);
             box.ScrollToCaret();
             box.ResumeLayout();
         }

@@ -31,11 +31,11 @@ namespace WinFormsApp
                         {
                             string matchingNumber = inputString[startIndex..(next + 1)];
 
-                            txtOutput.AppendText(inputString[0..startIndex], Color.Black);
+                            txtOutput.AppendText(inputString[0..startIndex]);
 
                             txtOutput.AppendText(matchingNumber, Color.Red);
 
-                            txtOutput.AppendText(inputString[(startIndex + matchingNumber.Length)..], Color.Black, true);
+                            txtOutput.AppendText(inputString[(startIndex + matchingNumber.Length)..], newLine: true);
 
                             break;
                         }
