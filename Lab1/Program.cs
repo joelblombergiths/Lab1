@@ -7,7 +7,8 @@ do
     Console.WriteLine("Welcome to Fredrik's Fantastic Figit Finder");
 
     Console.WriteLine("Enter a Figit Sequence:");
-    string inputString = Console.ReadLine();
+    string? inputString = Console.ReadLine();
+    if (string.IsNullOrEmpty(inputString)) continue;
 
     sum = 0;
 
